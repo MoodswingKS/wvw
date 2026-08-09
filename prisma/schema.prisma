@@ -1,0 +1,30 @@
+// Prisma schema — swap "sqlite" for "postgresql" and update DATABASE_URL
+// in .env when you're ready to move off local dev.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Starter models — extend these once game design is nailed down.
+
+model Player {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  createdAt DateTime @default(now())
+
+  sessions GameSession[]
+}
+
+model GameSession {
+  id        String   @id @default(cuid())
+  status    String   @default("waiting") // waiting | active | finished
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  players Player[]
+}

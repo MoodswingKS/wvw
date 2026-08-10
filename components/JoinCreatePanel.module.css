@@ -61,6 +61,34 @@
   color: var(--mist-600);
 }
 
+.hint {
+  font-size: 0.75rem;
+  color: var(--mist-600);
+  margin: 0;
+}
+
+.pillGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.pill {
+  background: var(--night-900);
+  border: 1px solid var(--night-700);
+  color: var(--mist-400);
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.pill[data-active="true"] {
+  border-color: var(--lantern-500);
+  background: rgba(232, 162, 61, 0.14);
+  color: var(--lantern-400);
+}
+
 .submit {
   margin-top: 4px;
   background: var(--lantern-500);

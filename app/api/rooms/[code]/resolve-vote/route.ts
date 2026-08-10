@@ -42,17 +42,19 @@ export async function POST(
     .filter((r): r is Role => r !== null);
 
   const winner = checkWinCondition(aliveRoles);
+  const phaseEndsAt = winner ? null : new Date(Date.now() + room.roundSeconds * 1000);
 
   await prisma.room.update({
     where: { id: room.id },
     data: winner
-      ? { status: "ENDED" }
-      : { status: "NIGHT", dayNumber: { increment: 1 } },
+      ? { status: "ENDED", phaseEndsAt: null }
+      : { status: "NIGHT", dayNumber: { increment: 1 }, phaseEndsAt },
   });
 
   return NextResponse.json({
     eliminatedMembershipId: eliminatedId,
     winner,
     status: winner ? "ENDED" : "NIGHT",
+    phaseEndsAt,
   });
 }

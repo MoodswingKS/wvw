@@ -1,8 +1,9 @@
 # Werewolf Online
 
-Full-stack Next.js infrastructure for an online Werewolf/Mafia party game: App Router + TypeScript + Prisma (Postgres via Supabase).
+Full-stack Next.js infrastructure for an online Werewolf party game: App Router + TypeScript + Prisma (Postgres via Supabase).
 
-Messaging is intentionally out of scope — players coordinate over WhatsApp or whatever platform they already use. This app handles the parts that need a shared source of truth: who's in the game, what role they have, and how night/day actions resolve.
+Messaging is intentionally out of scope: players coordinate over WhatsApp, face to face or another platform they already use. 
+This app handles the parts that need a shared source of truth: who's in the game, what role they have, and how night/day actions resolve.
 
 ## Stack
 
@@ -12,28 +13,20 @@ Messaging is intentionally out of scope — players coordinate over WhatsApp or 
 
 ## Setup
 
-1. Create a free project at [supabase.com](https://supabase.com).
-2. From Project Settings → Database → Connection string, copy the **Session** mode string (port 5432) into `.env` as `DATABASE_URL` (see `.env.example`).
-3. Install and set up the database:
-
 ```bash
 npm install
-cp .env.example .env   # then fill in your Supabase DATABASE_URL
-npm run db:migrate     # creates tables from prisma/schema.prisma
+cp .env.example .env   
+npm run db:migrate    
 npm run dev             # http://localhost:3000
 ```
 
 Visit `/api/health` to confirm the database connection.
 
-### Note on Prisma 7
-
-This project uses Prisma 7, where the connection URL lives in **`prisma.config.ts`**, not in `prisma/schema.prisma` — and `PrismaClient` needs an explicit driver adapter (`@prisma/adapter-pg`, wired up in `lib/prisma.ts`). Both already read from `DATABASE_URL` in `.env`, so you shouldn't need to touch either file.
-
 ## Frontend
 
 - `/` — landing page: what the game is, how a round works, and a create/join panel wired to the room API routes
 - `/roles` — role reference: Villager, Werewolf, Seer, Doctor, each with their ability and how many are in a typical game
-- `components/` — `Nav`, `RoleCard` + `RoleIcon`, `JoinCreatePanel` (client component — the only one that needs interactivity)
+- `components/` — `Nav`, `RoleCard` + `RoleIcon`, `JoinCreatePanel` 
 - `lib/roles.ts` — the display copy for each role, kept separate from Prisma's bare `Role` enum in the schema
 - `app/globals.css` — design tokens (a night-village palette: deep indigo ground, lantern amber, muted blood-red for the werewolf thread)
 
@@ -77,3 +70,9 @@ None of these routes check *who's allowed* to call them yet — right now anyone
 2. **Game room UI** — a `/room/[code]` page that shows your role, alive/dead players, and buttons for night actions / voting during the right phase.
 3. **Phase transitions** — resolve-night/resolve-vote are host-triggered right now (call the endpoint manually or from a "resolve" button). You may want a timer-based auto-resolve instead.
 4. **More roles** — the schema, role deck, and `/roles` page only cover Villager/Werewolf/Seer/Doctor; extend `Role` in the schema, `buildRoleDeck`, and `lib/roles.ts` together as you add roles like Hunter or Witch.
+
+## Current bugs
+- Host can resolve rounds before people have done their actions, even though the timer hasnt expired yet. Hosts should not even need to resolve rounds, this should happen automatically when all actions are done OR the countdown reaches zero.
+- You cant see each other votes. When someone votes, the others need to see this immediately.
+- The seer gets results immediately, this should be moved after the night is resolved. At the start of a new day.
+- Wolves should see their choices immediately too, so a tie can be avoided

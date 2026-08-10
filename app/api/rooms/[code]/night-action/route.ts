@@ -26,6 +26,9 @@ export async function POST(
   if (room.status !== "NIGHT") {
     return NextResponse.json({ error: "Not currently night phase" }, { status: 409 });
   }
+  if (room.phaseEndsAt && new Date() > room.phaseEndsAt) {
+    return NextResponse.json({ error: "Time's up for this phase — your action won't count" }, { status: 409 });
+  }
 
   const actor = await prisma.roomMembership.findFirst({
     where: { roomId: room.id, user: { username } },

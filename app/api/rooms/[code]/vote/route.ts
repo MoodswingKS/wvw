@@ -18,6 +18,9 @@ export async function POST(
   if (room.status !== "DAY") {
     return NextResponse.json({ error: "Not currently day phase" }, { status: 409 });
   }
+  if (room.phaseEndsAt && new Date() > room.phaseEndsAt) {
+    return NextResponse.json({ error: "Time's up for this phase — your vote won't count" }, { status: 409 });
+  }
 
   const voter = await prisma.roomMembership.findFirst({
     where: { roomId: room.id, user: { username } },

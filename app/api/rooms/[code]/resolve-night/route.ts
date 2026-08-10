@@ -52,10 +52,11 @@ export async function POST(
     .filter((r): r is Role => r !== null);
 
   const winner = checkWinCondition(aliveRoles);
+  const phaseEndsAt = winner ? null : new Date(Date.now() + room.roundSeconds * 1000);
 
   await prisma.room.update({
     where: { id: room.id },
-    data: { status: winner ? "ENDED" : "DAY" },
+    data: { status: winner ? "ENDED" : "DAY", phaseEndsAt },
   });
 
   return NextResponse.json({
@@ -63,5 +64,6 @@ export async function POST(
     seerResults: result.seerResults,
     winner,
     status: winner ? "ENDED" : "DAY",
+    phaseEndsAt,
   });
 }

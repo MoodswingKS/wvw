@@ -31,6 +31,11 @@ enum ActionType {
   PROTECT   // doctor save
 }
 
+enum RoleMode {
+  AUTO   // role deck is scaled from player count automatically
+  MANUAL // host specifies how many of each role, rest fill as Villager
+}
+
 model User {
   id        String   @id @default(cuid())
   username  String   @unique
@@ -47,6 +52,19 @@ model Room {
   dayNumber    Int        @default(0)
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
+
+  // Set by the host at creation. Applies to every night/day phase —
+  // each phase gets this many seconds before it needs resolving.
+  roundSeconds Int      @default(3600)
+  // When the current phase's countdown ends. Null in LOBBY/ENDED.
+  phaseEndsAt  DateTime?
+
+  // AUTO: role deck is scaled from player count (see buildRoleDeck).
+  // MANUAL: host sets counts per role in roleCounts before starting;
+  // sky's the limit on how many roles get added later (50+ planned) —
+  // this stays a flexible map rather than named columns.
+  roleMode     RoleMode @default(AUTO)
+  roleCounts   Json?    // e.g. {"WEREWOLF": 2, "SEER": 1, "DOCTOR": 1}
 
   hostId       String
   host         User       @relation("RoomHost", fields: [hostId], references: [id])

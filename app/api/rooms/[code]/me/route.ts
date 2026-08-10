@@ -35,9 +35,38 @@ export async function GET(
       role: me.role === "WEREWOLF" && m.role === "WEREWOLF" ? m.role : undefined,
     }));
 
+  // Seer results are derived from stored NightActions + the target's
+  // (persisted) role, rather than only returned once by resolve-night —
+  // that way a seer reloading the page doesn't lose their own history.
+  let seerHistory: { dayNumber: number; targetUsername: string; isWerewolf: boolean }[] | undefined;
+  if (me.role === "SEER") {
+    const investigations = await prisma.nightAction.findMany({
+      where: { roomId: room.id, actorId: me.id, actionType: "INVESTIGATE" },
+      orderBy: { dayNumber: "asc" },
+    });
+    const membershipById = new Map(room.memberships.map((m) => [m.id, m]));
+    seerHistory = investigations.map((inv) => {
+      const target = membershipById.get(inv.targetId);
+      return {
+        dayNumber: inv.dayNumber,
+        targetUsername: target?.user.username ?? "unknown",
+        isWerewolf: target?.role === "WEREWOLF",
+      };
+    });
+  }
+
   return NextResponse.json({
-    room: { code: room.code, status: room.status, dayNumber: room.dayNumber },
+    room: {
+      code: room.code,
+      status: room.status,
+      dayNumber: room.dayNumber,
+      roundSeconds: room.roundSeconds,
+      phaseEndsAt: room.phaseEndsAt,
+      roleMode: room.roleMode,
+      roleCounts: room.roleCounts,
+    },
     me: { username, role: me.role, isAlive: me.isAlive, isHost: me.isHost },
     others,
+    seerHistory,
   });
 }

@@ -1,0 +1,110 @@
+/* ---------------------------------------------------------------
+   Design tokens
+   Palette: a village square after dark — deep indigo night, lantern
+   amber for warmth and stakes, muted blood-red used sparingly for
+   the werewolf thread, parchment for readable text on dark ground.
+   ----------------------------------------------------------------*/
+:root {
+  --night-950: #0b1120;
+  --night-900: #0f1626;
+  --night-800: #1b2440;
+  --night-700: #283358;
+
+  --lantern-400: #f0b355;
+  --lantern-500: #e8a23d;
+  --lantern-600: #c97829;
+
+  --blood-500: #a63d40;
+  --blood-400: #c05659;
+
+  --parchment-100: #f4efe4;
+  --parchment-300: #d9d2c2;
+
+  --mist-400: #7c88a8;
+  --mist-600: #5b6b8c;
+
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+
+  --max-width: 1100px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--night-950);
+  color: var(--parchment-100);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.55;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.1;
+  margin: 0;
+}
+
+p {
+  margin: 0;
+  color: var(--parchment-300);
+}
+
+a {
+  color: inherit;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--lantern-400);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+button {
+  font-family: inherit;
+}
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--lantern-400);
+}

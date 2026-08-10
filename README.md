@@ -29,6 +29,16 @@ Visit `/api/health` to confirm the database connection.
 
 This project uses Prisma 7, where the connection URL lives in **`prisma.config.ts`**, not in `prisma/schema.prisma` — and `PrismaClient` needs an explicit driver adapter (`@prisma/adapter-pg`, wired up in `lib/prisma.ts`). Both already read from `DATABASE_URL` in `.env`, so you shouldn't need to touch either file.
 
+## Frontend
+
+- `/` — landing page: what the game is, how a round works, and a create/join panel wired to the room API routes
+- `/roles` — role reference: Villager, Werewolf, Seer, Doctor, each with their ability and how many are in a typical game
+- `components/` — `Nav`, `RoleCard` + `RoleIcon`, `JoinCreatePanel` (client component — the only one that needs interactivity)
+- `lib/roles.ts` — the display copy for each role, kept separate from Prisma's bare `Role` enum in the schema
+- `app/globals.css` — design tokens (a night-village palette: deep indigo ground, lantern amber, muted blood-red for the werewolf thread)
+
+The create/join panel calls the existing `/api/rooms` and `/api/rooms/[code]/join` routes directly — no game-room UI exists yet, so after creating or joining you'll just see a confirmation with the room code. See Next steps.
+
 ## Data model (prisma/schema.prisma)
 
 - **User** — persistent player identity (just a username for now — no auth yet)
@@ -64,6 +74,6 @@ None of these routes check *who's allowed* to call them yet — right now anyone
 ## Next steps
 
 1. **Auth** — right now anything goes as long as you know a username. Consider Supabase Auth or NextAuth so players can't act as each other or the host.
-2. **UI** — none of this has a frontend yet; these are pure API routes.
+2. **Game room UI** — a `/room/[code]` page that shows your role, alive/dead players, and buttons for night actions / voting during the right phase.
 3. **Phase transitions** — resolve-night/resolve-vote are host-triggered right now (call the endpoint manually or from a "resolve" button). You may want a timer-based auto-resolve instead.
-4. **More roles** — the schema and role deck only cover Villager/Werewolf/Seer/Doctor; extend `Role` and `buildRoleDeck` as you add roles like Hunter or Witch.
+4. **More roles** — the schema, role deck, and `/roles` page only cover Villager/Werewolf/Seer/Doctor; extend `Role` in the schema, `buildRoleDeck`, and `lib/roles.ts` together as you add roles like Hunter or Witch.

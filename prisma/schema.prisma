@@ -1,30 +1,113 @@
-// Prisma schema — swap "sqlite" for "postgresql" and update DATABASE_URL
-// in .env when you're ready to move off local dev.
+// Prisma schema — targets Supabase Postgres.
+// DATABASE_URL comes from your Supabase project's connection string.
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider = "postgresql"
 }
 
-// Starter models — extend these once game design is nailed down.
+enum RoomStatus {
+  LOBBY
+  NIGHT
+  DAY
+  VOTING
+  ENDED
+}
 
-model Player {
+enum Role {
+  VILLAGER
+  WEREWOLF
+  SEER
+  DOCTOR
+  // add more roles here as you design them (hunter, witch, etc.)
+}
+
+enum ActionType {
+  KILL      // werewolf night kill
+  INVESTIGATE // seer check
+  PROTECT   // doctor save
+}
+
+model User {
   id        String   @id @default(cuid())
   username  String   @unique
   createdAt DateTime @default(now())
 
-  sessions GameSession[]
+  memberships RoomMembership[]
+  hostedRooms Room[]           @relation("RoomHost")
 }
 
-model GameSession {
-  id        String   @id @default(cuid())
-  status    String   @default("waiting") // waiting | active | finished
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Room {
+  id           String     @id @default(cuid())
+  code         String     @unique // short join code, e.g. "FOX419"
+  status       RoomStatus @default(LOBBY)
+  dayNumber    Int        @default(0)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
 
-  players Player[]
+  hostId       String
+  host         User       @relation("RoomHost", fields: [hostId], references: [id])
+
+  memberships  RoomMembership[]
+  votes        Vote[]
+  nightActions NightAction[]
+}
+
+// One row per player-in-a-room; keeps room-specific state
+// (role, alive status) separate from the persistent User identity.
+model RoomMembership {
+  id       String  @id @default(cuid())
+  role     Role?
+  isAlive  Boolean @default(true)
+  isHost   Boolean @default(false)
+  joinedAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  roomId String
+  room   Room   @relation(fields: [roomId], references: [id])
+
+  votesCast    Vote[]        @relation("VoterMembership")
+  votesAgainst Vote[]        @relation("TargetMembership")
+  actionsBy    NightAction[] @relation("ActorMembership")
+  actionsOn    NightAction[] @relation("TargetOfAction")
+
+  @@unique([userId, roomId])
+}
+
+model Vote {
+  id        String   @id @default(cuid())
+  dayNumber Int
+  createdAt DateTime @default(now())
+
+  roomId String
+  room   Room   @relation(fields: [roomId], references: [id])
+
+  voterId String
+  voter   RoomMembership @relation("VoterMembership", fields: [voterId], references: [id])
+
+  targetId String
+  target   RoomMembership @relation("TargetMembership", fields: [targetId], references: [id])
+
+  @@unique([roomId, dayNumber, voterId]) // one vote per player per day
+}
+
+model NightAction {
+  id         String     @id @default(cuid())
+  actionType ActionType
+  dayNumber  Int
+  createdAt  DateTime   @default(now())
+
+  roomId String
+  room   Room   @relation(fields: [roomId], references: [id])
+
+  actorId String
+  actor   RoomMembership @relation("ActorMembership", fields: [actorId], references: [id])
+
+  targetId String
+  target   RoomMembership @relation("TargetOfAction", fields: [targetId], references: [id])
 }

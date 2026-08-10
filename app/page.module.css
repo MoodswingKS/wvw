@@ -1,0 +1,107 @@
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: 72px 0 64px;
+  border-bottom: 1px solid var(--night-700);
+}
+
+.glow {
+  position: absolute;
+  top: -180px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 640px;
+  height: 640px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232, 162, 61, 0.16) 0%, rgba(232, 162, 61, 0) 65%);
+  pointer-events: none;
+}
+
+.heroInner {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+@media (max-width: 800px) {
+  .heroInner {
+    grid-template-columns: 1fr;
+  }
+}
+
+.heroText {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.headline {
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  color: var(--parchment-100);
+}
+
+.sub {
+  font-size: 1.08rem;
+  max-width: 52ch;
+}
+
+.subSecondary {
+  font-size: 0.95rem;
+  color: var(--mist-400);
+  max-width: 52ch;
+}
+
+.rolesLink {
+  margin-top: 6px;
+  color: var(--lantern-400);
+  text-decoration: none;
+  font-size: 0.92rem;
+  width: fit-content;
+}
+
+.rolesLink:hover {
+  text-decoration: underline;
+}
+
+.how {
+  padding: 56px 24px;
+}
+
+.steps {
+  list-style: none;
+  margin: 24px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+@media (max-width: 800px) {
+  .steps {
+    grid-template-columns: 1fr;
+  }
+}
+
+.step {
+  display: flex;
+  gap: 14px;
+}
+
+.step h3 {
+  font-size: 1.05rem;
+  color: var(--parchment-100);
+  margin-bottom: 6px;
+}
+
+.step p {
+  font-size: 0.92rem;
+}
+
+.stepNum {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--lantern-500);
+  padding-top: 2px;
+}

@@ -34,8 +34,8 @@ export const roles: RoleInfo[] = [
     alignment: "VILLAGE",
     tagline: "Sees what others can't.",
     ability:
-      "Each night, checks one player and learns whether they're a werewolf. Says nothing out loud — the information is only as good as what the Seer does with it by day.",
-    countRule: "One per game.",
+      "Each night, checks one player and learns their role.",
+    countRule: "",
   },
   {
     id: "DOCTOR",
@@ -44,6 +44,6 @@ export const roles: RoleInfo[] = [
     tagline: "Keeps one person alive till morning.",
     ability:
       "Each night, protects one player from the werewolves' kill. Can protect themselves, but not the same person two nights running.",
-    countRule: "One per game.",
+    countRule: "",
   },
 ];

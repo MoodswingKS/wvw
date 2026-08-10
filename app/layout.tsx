@@ -16,7 +16,7 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Lantern Village — Online Werewolf",
+  title: "Wakkerdam - Online wvw",
   description: "Play Werewolf online with your group. Roles, night actions, and voting, without needing a forum.",
 };
 

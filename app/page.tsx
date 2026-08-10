@@ -9,20 +9,21 @@ export default function Home() {
         <div className={styles.glow} aria-hidden="true" />
         <div className={`container ${styles.heroInner}`}>
           <div className={styles.heroText}>
-            <p className="eyebrow">A village, a secret, four roles</p>
+            <p className="eyebrow">A peaceful village, can you keep it safe? 
+              <br />
+              Or are you the danger? </p>
             <h1 className={styles.headline}>
               The village sleeps.
               <br />
               Something in it doesn&apos;t.
             </h1>
             <p className={styles.sub}>
-              Lantern Village is Werewolf, played online with people you already play
-              with — no forum thread required. Everyone gets a secret role. Night falls,
-              the wolves choose. Day breaks, the village votes. Repeat until one side
-              is gone.
+              Wakkerdam is my way of continuing the online game without the need of a forum. 
+              This will be a lightweight alternative. No accounts, no leaderboards.
+              Just a game room. 
             </p>
             <p className={styles.subSecondary}>
-              Coordinate over whatever you already use — WhatsApp, a call, sitting in the
+              Coordinate over whatever you already use: WhatsApp, discord, sitting in the
               same room. This just keeps track of roles, night actions, and votes so
               nobody has to.
             </p>
@@ -56,7 +57,7 @@ export default function Home() {
             <span className={styles.stepNum}>03</span>
             <div>
               <h3>The village votes</h3>
-              <p>Whoever gets the most votes is out. Night falls again — until one side wins.</p>
+              <p>Whoever gets the most votes is out. Night falls again, until one side wins.</p>
             </div>
           </li>
         </ol>

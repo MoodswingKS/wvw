@@ -7,7 +7,7 @@ export default function Nav() {
       <div className={`container ${styles.inner}`}>
         <Link href="/" className={styles.wordmark}>
           <span className={styles.lantern} aria-hidden="true" />
-          Lantern Village
+          Wakkerdam
         </Link>
         <nav className={styles.links} aria-label="Primary">
           <Link href="/">Home</Link>
